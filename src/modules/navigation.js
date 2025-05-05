@@ -55,13 +55,13 @@ export class Navigation {
 
       const dirs = items
         .filter((item) => item.isDirectory())
-        .map((dir) => ({ name: dir.name, type: 'directory' }))
-        .sort((a, b) => a.name.localeCompare(b.name));
+        .map((dir) => ({ Name: dir.name, Type: 'directory' }))
+        .sort((a, b) => a.Name.localeCompare(b.Name));
 
       const files = items
         .filter((item) => item.isFile())
-        .map((file) => ({ name: file.name, type: 'file' }))
-        .sort((a, b) => a.name.localeCompare(b.name));
+        .map((file) => ({ Name: file.name, Type: 'file' }))
+        .sort((a, b) => a.Name.localeCompare(b.Name));
 
       const allItems = [...dirs, ...files];
 
@@ -72,17 +72,7 @@ export class Navigation {
         return;
       }
 
-      const maxNameLength = Math.max(...allItems.map((item) => item.name.length));
-      const numberWidth = allItems.length.toString().length + 2;
-
-      console.log('-'.repeat(maxNameLength + numberWidth + 18));
-      console.log(`${'(index)'.padEnd(numberWidth)}    ${'Name'.padEnd(maxNameLength)}    Type`);
-      console.log('-'.repeat(maxNameLength + numberWidth + 18));
-
-      allItems.forEach((item, index) => {
-        console.log(`${(index + '.').padEnd(numberWidth)}    ${item.name.padEnd(maxNameLength)}    ${item.type}`);
-      });
-      console.log('-'.repeat(maxNameLength + numberWidth + 18));
+      console.table(allItems);
     } catch (err) {
       console.log('Operation failed: Cannot read directory contents.');
     }
