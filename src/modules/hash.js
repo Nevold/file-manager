@@ -3,6 +3,7 @@ import { createReadStream } from 'fs';
 import { createHash } from 'crypto';
 import { COLORS } from '../shared/constants.js';
 import { pipeline } from 'stream/promises';
+import { Utils } from '../shared/utils.js';
 
 export class Hash {
   static getHash = async (file) => {
@@ -18,6 +19,7 @@ export class Hash {
         }
       });
 
+      Utils.printCurrentDirectory();
       console.log(`Hash: ${COLORS.YELLOW}${hash.digest('hex')}${COLORS.RESET_YELLOW}`);
     } catch (err) {
       if (err.code === 'ENOENT') {

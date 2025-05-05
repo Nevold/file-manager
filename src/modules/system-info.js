@@ -1,11 +1,12 @@
 import os from 'os';
 import process from 'node:process';
 import { COLORS, Constants } from '../shared/constants.js';
+import { Utils } from '../shared/utils.js';
 
 export class SystemInfo {
   static getEOL = () => {
     const eol = os.EOL;
-
+    Utils.printCurrentDirectory();
     console.log('System EOL:');
     if (eol === '\n') {
       console.log(`${COLORS.YELLOW}\\n LF, Unix${COLORS.RESET_YELLOW}`);
@@ -21,6 +22,7 @@ export class SystemInfo {
 
     const lineLength = cpus[0].model.length + Constants.LINE_LENGTH;
 
+    Utils.printCurrentDirectory();
     console.log(`Total CPUs: ${cpus.length}`);
     console.log('-'.repeat(lineLength));
 
@@ -35,12 +37,14 @@ export class SystemInfo {
 
   static getHomeDirectory = () => {
     const homeDir = os.homedir();
+    Utils.printCurrentDirectory();
     console.log(`Home Directory: ${COLORS.YELLOW}${homeDir}${COLORS.RESET_YELLOW}`);
   };
 
   static getUsername = () => {
     try {
       const username = os.userInfo().username;
+      Utils.printCurrentDirectory();
       console.log(`System username: ${COLORS.YELLOW}${username}${COLORS.RESET_YELLOW}`);
     } catch (err) {
       console.error(`FS operation failed: ${err.message}`);
@@ -48,6 +52,7 @@ export class SystemInfo {
   };
 
   static getArchitecture = () => {
+    Utils.printCurrentDirectory();
     console.log(`Architecture: ${COLORS.YELLOW}${process.arch}${COLORS.RESET_YELLOW}`);
   };
 

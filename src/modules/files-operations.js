@@ -22,6 +22,7 @@ export class FilesOperations {
 
       await access(filePath, constants.F_OK);
       const content = await readFile(filePath, { encoding: 'utf8' });
+      Utils.printCurrentDirectory();
       console.log(content);
     } catch (err) {
       if (err.code === 'ENOENT') {
@@ -48,6 +49,7 @@ export class FilesOperations {
     } catch (error) {
       if (error.code === 'ENOENT') {
         await writeFile(filePath, '');
+        Utils.printCurrentDirectory();
         console.log(`File ${COLORS.YELLOW}${file}${COLORS.RESET_YELLOW} created successfully!`);
       } else {
         console.error(`FS operation failed: ${error.message}`);
@@ -61,6 +63,7 @@ export class FilesOperations {
 
     try {
       await mkdir(dirPath);
+      Utils.printCurrentDirectory();
       console.log(`Directory ${COLORS.YELLOW}${newDirName}${COLORS.RESET_YELLOW} created successfully!`);
       return true;
     } catch (err) {
@@ -93,6 +96,7 @@ export class FilesOperations {
       } catch (error) {
         if (error.code === 'ENOENT') {
           await renameFs(oldPath, newPath);
+          Utils.printCurrentDirectory();
           console.log(`File ${COLORS.YELLOW}${pathToFile}${COLORS.RESET_YELLOW} rename successfully!`);
         } else {
           console.error(err.message);
@@ -117,6 +121,7 @@ export class FilesOperations {
 
       await pipeline(readableStream, writableStream);
 
+      Utils.printCurrentDirectory();
       console.log(`File copied successfully to ${COLORS.YELLOW}${destinationPath}${COLORS.RESET_YELLOW}`);
     } catch (err) {
       if (err.code === 'ENOENT') {
@@ -144,6 +149,7 @@ export class FilesOperations {
 
       await fs.promises.unlink(sourcePath);
 
+      Utils.printCurrentDirectory();
       console.log(`File moved successfully to ${COLORS.YELLOW}${destinationPath}${COLORS.RESET_YELLOW}`);
     } catch (err) {
       if (err.code === 'ENOENT') {
@@ -162,6 +168,8 @@ export class FilesOperations {
     try {
       await access(filePath, constants.F_OK);
       await fs.promises.unlink(filePath);
+
+      Utils.printCurrentDirectory();
       console.log(`File ${COLORS.YELLOW}${file}${COLORS.RESET_YELLOW} deleted successfully`);
     } catch (err) {
       console.error(`FS operation failed: ${err.message}`);

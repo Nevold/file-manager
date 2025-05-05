@@ -65,6 +65,8 @@ export class Navigation {
 
       const allItems = [...dirs, ...files];
 
+      Utils.printCurrentDirectory();
+
       if (allItems.length === 0) {
         console.log('Directory is empty.');
         return;

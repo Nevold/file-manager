@@ -8,6 +8,7 @@ import { Navigation } from './navigation.js';
 import { FilesOperations } from './files-operations.js';
 import { SystemInfo } from './system-info.js';
 import { Hash } from './hash.js';
+import { CompressOperations } from './compress.js';
 
 export class CommandsController {
   static rl = readline.createInterface({
@@ -117,6 +118,20 @@ export class CommandsController {
               continue;
             }
             await Hash.getHash(args[0]);
+            break;
+
+          case 'compress':
+            if (!Utils.isCorrectCommandForMultArgs(args)) {
+              continue;
+            }
+            await CompressOperations.compress(...args);
+            break;
+
+          case 'decompress':
+            if (!Utils.isCorrectCommandForMultArgs(args)) {
+              continue;
+            }
+            await CompressOperations.decompress(...args);
             break;
 
           default:
