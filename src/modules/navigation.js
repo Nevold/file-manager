@@ -75,13 +75,14 @@ export class Navigation {
       const maxNameLength = Math.max(...allItems.map((item) => item.name.length));
       const numberWidth = allItems.length.toString().length + 2;
 
-      console.log('-'.repeat(maxNameLength + numberWidth + 10));
-      console.log(`${'#'.padEnd(numberWidth)}${'Name'.padEnd(maxNameLength)}    Type`);
-      console.log('-'.repeat(maxNameLength + numberWidth + 10));
+      console.log('-'.repeat(maxNameLength + numberWidth + 18));
+      console.log(`${'(index)'.padEnd(numberWidth)}    ${'Name'.padEnd(maxNameLength)}    Type`);
+      console.log('-'.repeat(maxNameLength + numberWidth + 18));
 
       allItems.forEach((item, index) => {
-        console.log(`${(index + 1 + '.').padEnd(numberWidth)}${item.name.padEnd(maxNameLength)}    ${item.type}`);
+        console.log(`${(index + '.').padEnd(numberWidth)}    ${item.name.padEnd(maxNameLength)}    ${item.type}`);
       });
+      console.log('-'.repeat(maxNameLength + numberWidth + 18));
     } catch (err) {
       console.log('Operation failed: Cannot read directory contents.');
     }
