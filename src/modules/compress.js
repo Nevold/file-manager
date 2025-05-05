@@ -2,7 +2,7 @@ import { createReadStream, createWriteStream } from 'fs';
 import path from 'path';
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 import { pipeline } from 'stream/promises';
-import { unlink, access, constants } from 'fs/promises';
+import { stat } from 'fs/promises';
 import { COLORS } from '../shared/constants.js';
 import { Utils } from '../shared/utils.js';
 
@@ -11,7 +11,13 @@ export class CompressOperations {
     const normalizedOldPath = path.normalize(pathToFile);
     const normalizedNewPath = path.normalize(pathToDestination);
     const inputPath = path.resolve(process.cwd(), normalizedOldPath);
-    const outputPath = path.resolve(process.cwd(), normalizedNewPath);
+    let outputPath = path.resolve(process.cwd(), normalizedNewPath);
+
+    const destStats = await stat(outputPath).catch(() => null);
+    if (destStats && destStats.isDirectory()) {
+      const originalFilename = path.basename(inputPath) + '.gz';
+      outputPath = path.join(outputPath, originalFilename);
+    }
 
     const readableStream = createReadStream(inputPath, 'utf8');
     const writeStream = createWriteStream(outputPath, { flags: 'a' });
