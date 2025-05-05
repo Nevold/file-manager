@@ -1,0 +1,87 @@
+import os from 'os';
+import path from 'path';
+import process from 'process';
+import fs from 'fs/promises';
+import { Utils } from '../shared/utils.js';
+
+export class Navigation {
+  static rootDir = path.parse(os.homedir()).root;
+
+  static changeDirectory = async (newDir) => {
+    const isWithinRoot = (targetDir) => {
+      return path.resolve(targetDir).startsWith(this.rootDir);
+    };
+
+    try {
+      const targetDir = path.resolve(newDir);
+
+      if (!isWithinRoot(targetDir)) {
+        console.log('Cannot go above the root directory.');
+        return false;
+      }
+
+      process.chdir(targetDir);
+
+      Utils.printCurrentDirectory();
+      return true;
+    } catch (err) {
+      console.log('Operation failed: Directory does not exist or is inaccessible.');
+      return false;
+    }
+  };
+
+  static setUpDirectory = () => {
+    const currentDir = process.cwd();
+    if (currentDir === this.rootDir) {
+      console.log('Already at root directory. Cannot go higher.');
+      return false;
+    }
+
+    const parentDir = path.dirname(currentDir);
+
+    try {
+      process.chdir(parentDir);
+      Utils.printCurrentDirectory();
+      return true;
+    } catch (err) {
+      console.log('Operation failed: Cannot access parent directory.');
+      return false;
+    }
+  };
+
+  static listDirectory = async () => {
+    try {
+      const items = await fs.readdir(process.cwd(), { withFileTypes: true });
+
+      const dirs = items
+        .filter((item) => item.isDirectory())
+        .map((dir) => ({ name: dir.name, type: 'directory' }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      const files = items
+        .filter((item) => item.isFile())
+        .map((file) => ({ name: file.name, type: 'file' }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      const allItems = [...dirs, ...files];
+
+      if (allItems.length === 0) {
+        console.log('Directory is empty.');
+        return;
+      }
+
+      const maxNameLength = Math.max(...allItems.map((item) => item.name.length));
+      const numberWidth = allItems.length.toString().length + 2;
+
+      console.log('-'.repeat(maxNameLength + numberWidth + 10));
+      console.log(`${'#'.padEnd(numberWidth)}${'Name'.padEnd(maxNameLength)}    Type`);
+      console.log('-'.repeat(maxNameLength + numberWidth + 10));
+
+      allItems.forEach((item, index) => {
+        console.log(`${(index + 1 + '.').padEnd(numberWidth)}${item.name.padEnd(maxNameLength)}    ${item.type}`);
+      });
+    } catch (err) {
+      console.log('Operation failed: Cannot read directory contents.');
+    }
+  };
+}
